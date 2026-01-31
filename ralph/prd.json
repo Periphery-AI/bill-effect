@@ -1,0 +1,32 @@
+[
+  {
+    "category": "foundation",
+    "description": "Frontend scaffold and visual shell for Bill Effect",
+    "steps": [
+      "Open the web app",
+      "See a hero section and four cards describing the loop",
+      "Confirm no TypeScript errors"
+    ],
+    "passes": false
+  },
+  {
+    "category": "backend",
+    "description": "Integrate Opencode backend in apps/opencode",
+    "steps": [
+      "Install Opencode in apps/opencode",
+      "Document how to run the backend",
+      "Wire frontend to backend (placeholder ok)"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ai",
+    "description": "Add Grok tool stub that records single-step predictions",
+    "steps": [
+      "Create an API stub for a single prediction step",
+      "Expose a UI action to call the stub",
+      "Log the response in the UI"
+    ],
+    "passes": false
+  }
+]
