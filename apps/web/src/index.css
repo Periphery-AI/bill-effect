@@ -116,9 +116,27 @@ body {
   transition: border-color 0.2s, background 0.2s;
 }
 
-.drop-zone:hover {
+.drop-zone:hover,
+.drop-zone.dragging {
   border-color: var(--accent);
   background: #fff7f0;
+}
+
+.drop-zone.dragging {
+  border-style: solid;
+  background: rgba(208, 111, 60, 0.1);
+}
+
+.drop-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.drop-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
 }
 
 .drop-zone p {
@@ -127,13 +145,36 @@ body {
   font-size: 14px;
 }
 
-.or-divider {
-  margin: 12px 0 !important;
-  color: var(--muted);
+.file-types {
   font-size: 12px !important;
+  opacity: 0.7;
 }
 
-.drop-zone textarea {
+.browse-button {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--card);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.browse-button:hover {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+
+.or-divider {
+  margin: 16px 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.bill-textarea {
   width: 100%;
   border: 1px solid var(--stroke);
   border-radius: 8px;
@@ -145,9 +186,73 @@ body {
   background: var(--card);
 }
 
-.drop-zone textarea:focus {
+.bill-textarea:focus {
   outline: none;
   border-color: var(--accent);
+}
+
+.error-message {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  color: #c53030;
+  font-size: 13px;
+}
+
+/* Bill Summary View */
+.bill-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bill-title {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.bill-filename {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.bill-stats {
+  font-size: 12px;
+  color: var(--accent-2);
+  font-weight: 500;
+}
+
+.bill-preview {
+  font-family: "Crimson Text", serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+  padding: 12px;
+  background: #faf7f3;
+  border-radius: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.reset-button {
+  margin-top: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--card);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-button:hover {
+  border-color: var(--accent);
+  background: var(--bg);
 }
 
 /* Map View Component */

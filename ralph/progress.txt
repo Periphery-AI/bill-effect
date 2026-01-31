@@ -61,3 +61,21 @@ Files changed:
 - apps/web/src/index.css (updated map styles, added tooltip styles)
 
 ---
+
+## Task 4: Bill Input Component with Drag-Drop and Paste (COMPLETED)
+- Implemented full drag-drop functionality for file uploads
+- Added visual feedback when dragging files over drop zone (border and background change)
+- Added "Browse Files" button as alternative to drag-drop
+- Text area for pasting bill content directly
+- Automatic title extraction from bill text (looks for H.R., S., ACT, BILL patterns)
+- Bill summary view after loading shows: title, filename (if from file), character/word count, preview
+- "Load Different Bill" button to reset and try another bill
+- Error handling for unsupported file types with user-friendly messages
+- PDF support stubbed with informative message
+- Supports .txt and .md files
+
+Files changed:
+- apps/web/src/components/BillInput.tsx (complete rewrite with full functionality)
+- apps/web/src/index.css (new styles for drop zone states, bill summary, error messages)
+
+---
