@@ -98,3 +98,20 @@ Files changed:
 - apps/web/src/index.css (updated timeline styles with wrapper, dates, improved responsive)
 
 ---
+
+## Task 6: Zustand Store for App State (COMPLETED)
+- Created centralized Zustand store in src/store/index.ts
+- Store manages: bill content, simulation events, current date, playback state
+- Bill actions: setBill, clearBill
+- Event actions: addEvent, addEvents, clearEvents, getEventsUpToDate (filter by date)
+- Playback actions: play, pause, togglePlayback, setCurrentDate, setSpeed, setDateRange, resetPlayback
+- Simulation actions: resetSimulation (resets all state)
+- Created convenience selector hooks: useBill, useEvents, usePlayback
+- Created action group hooks: useBillActions, useEventActions, usePlaybackActions
+- Full TypeScript types for all state and actions
+- Leverages existing types from src/types/index.ts
+
+Files changed:
+- apps/web/src/store/index.ts (new)
+
+---
