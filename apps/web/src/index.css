@@ -382,6 +382,148 @@ body::before {
   color: var(--accent-cyan);
 }
 
+/* Key Points Section */
+.key-points-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.analyzing-spinner {
+  animation: spin 1s linear infinite;
+}
+
+.key-points-section {
+  width: 100%;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.key-points-header {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.key-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.key-points-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.key-points-list::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.key-points-list::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 3px;
+}
+
+.key-points-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.key-point-item {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.key-point-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 8px;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-radius: 4px;
+}
+
+.key-point-toggle:hover {
+  background: var(--bg-tertiary);
+}
+
+.key-point-number {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.key-point-item.expanded .key-point-number {
+  background: var(--accent-green);
+  color: var(--bg-primary);
+}
+
+.key-point-title {
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.key-point-item.expanded .key-point-title {
+  color: var(--text-primary);
+}
+
+.key-point-chevron {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  opacity: 0.5;
+}
+
+.key-point-toggle:hover .key-point-chevron {
+  opacity: 1;
+}
+
+.key-point-item.expanded .key-point-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.key-point-content {
+  display: none;
+}
+
+.key-point-content.visible {
+  display: block;
+}
+
+.key-point-content p {
+  margin: 0;
+  padding: 0 8px 14px 36px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
 /* Map View Component */
 .map-view {
   width: 100%;

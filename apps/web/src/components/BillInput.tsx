@@ -1,12 +1,14 @@
 import { useState, useCallback, useRef, type DragEvent, type ChangeEvent } from 'react';
 import { useBill, useBillActions } from '../store';
 import { extractPdfText, isReductoConfigured } from '../api/reducto';
-import type { Bill } from '../types';
+import { analyzeBill } from '../api/grok';
+import type { Bill, KeyPoint } from '../types';
 
 interface ParsedBill {
   title: string;
   content: string;
   filename?: string;
+  keyPoints?: KeyPoint[];
 }
 
 export function BillInput() {
@@ -15,6 +17,8 @@ export function BillInput() {
   const [localBill, setLocalBill] = useState<ParsedBill | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [expandedKeyPoints, setExpandedKeyPoints] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -23,6 +27,7 @@ export function BillInput() {
     title: storedBill.title,
     content: storedBill.content,
     filename: undefined,
+    keyPoints: storedBill.keyPoints,
   } : localBill;
 
   // Helper to save bill to store
@@ -32,6 +37,7 @@ export function BillInput() {
       title: parsedBill.title,
       content: parsedBill.content,
       uploadedAt: new Date(),
+      keyPoints: parsedBill.keyPoints,
     };
     setStoreBill(newBill);
   }, [setStoreBill]);
@@ -62,14 +68,14 @@ export function BillInput() {
     return 'Untitled Bill';
   };
 
-  const parseTextContent = useCallback((content: string, filename?: string) => {
+  const parseTextContent = useCallback(async (content: string, filename?: string) => {
     if (!content.trim()) {
       setError('The file appears to be empty');
       return;
     }
 
     const title = extractTitle(content);
-    const parsedBill = {
+    const parsedBill: ParsedBill = {
       title,
       content: content.trim(),
       filename,
@@ -77,6 +83,27 @@ export function BillInput() {
     setLocalBill(parsedBill);
     saveBillToStore(parsedBill);
     setError(null);
+
+    // Analyze the bill to extract key points
+    setIsAnalyzing(true);
+    try {
+      const analysis = await analyzeBill(content);
+      const keyPoints: KeyPoint[] = analysis.clauses.map((clause) => ({
+        id: clause.id,
+        title: clause.title,
+        summary: clause.summary,
+        category: clause.category,
+      }));
+
+      const updatedBill = { ...parsedBill, keyPoints };
+      setLocalBill(updatedBill);
+      saveBillToStore(updatedBill);
+    } catch (err) {
+      console.error('Failed to analyze bill:', err);
+      // Don't show error to user - key points are optional
+    } finally {
+      setIsAnalyzing(false);
+    }
   }, [saveBillToStore]);
 
   const handleFile = useCallback(async (file: File) => {
@@ -168,6 +195,7 @@ export function BillInput() {
     setLocalBill(null);
     clearBill();
     setError(null);
+    setExpandedKeyPoints(new Set());
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -175,6 +203,18 @@ export function BillInput() {
 
   const handleBrowseClick = useCallback(() => {
     fileInputRef.current?.click();
+  }, []);
+
+  const toggleKeyPoint = useCallback((id: string) => {
+    setExpandedKeyPoints((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
   }, []);
 
   // Show summary view when bill is loaded
@@ -190,9 +230,55 @@ export function BillInput() {
           </div>
           <div className="bill-loaded-message">PDF contents extracted</div>
           <div className="bill-title">{bill.title}</div>
-          {bill.filename && (
-            <div className="bill-filename">{bill.filename}</div>
-          )}
+
+          {/* Key Points Section */}
+          {isAnalyzing ? (
+            <div className="key-points-loading">
+              <div className="analyzing-spinner">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+              </div>
+              <span>Analyzing key points...</span>
+            </div>
+          ) : bill.keyPoints && bill.keyPoints.length > 0 ? (
+            <div className="key-points-section">
+              <div className="key-points-header">Key Points</div>
+              <div className="key-points-list">
+                {bill.keyPoints.map((point, index) => (
+                  <div
+                    key={point.id}
+                    className={`key-point-item ${expandedKeyPoints.has(point.id) ? 'expanded' : ''}`}
+                  >
+                    <button
+                      className="key-point-toggle"
+                      onClick={() => toggleKeyPoint(point.id)}
+                    >
+                      <span className="key-point-number">{index + 1}</span>
+                      <span className="key-point-title">{point.title}</span>
+                      <svg
+                        className="key-point-chevron"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+                    <div className={`key-point-content ${expandedKeyPoints.has(point.id) ? 'visible' : ''}`}>
+                      <p>{point.summary}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           <button className="reset-button" onClick={handleReset}>
             Load Different Bill
           </button>
