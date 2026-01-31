@@ -323,10 +323,11 @@ body {
   background: var(--card);
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .play-btn:hover {
@@ -334,8 +335,29 @@ body {
   border-color: var(--accent);
 }
 
-.timeline-track {
+.play-btn:active {
+  transform: scale(0.95);
+}
+
+.timeline-wrapper {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeline-dates {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.date-label {
+  font-weight: 500;
+}
+
+.timeline-track {
   height: 8px;
   background: var(--bg);
   border-radius: 4px;
@@ -343,19 +365,22 @@ body {
   cursor: pointer;
 }
 
+.timeline-track:hover .timeline-scrubber {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
 .timeline-progress {
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
-  width: 25%;
   background: var(--accent);
   border-radius: 4px;
+  transition: width 0.1s ease-out;
 }
 
 .timeline-scrubber {
   position: absolute;
-  left: 25%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 16px;
@@ -364,19 +389,35 @@ body {
   border: 2px solid var(--card);
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  transition: transform 0.1s ease-out;
+}
+
+.timeline-scrubber:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.3);
 }
 
 .current-date {
   font-size: 14px;
   font-weight: 600;
-  min-width: 120px;
+  min-width: 130px;
   text-align: right;
+  color: var(--ink);
+  flex-shrink: 0;
 }
 
 .speed-controls {
   display: flex;
   gap: 8px;
   justify-content: center;
+  align-items: center;
+}
+
+.speed-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-right: 4px;
 }
 
 .speed-btn {
@@ -440,16 +481,30 @@ body {
 
   .timeline-controls {
     flex-wrap: wrap;
+    gap: 12px;
   }
 
   .current-date {
     width: 100%;
     text-align: center;
     order: -1;
+    min-width: unset;
   }
 
-  .timeline-track {
+  .timeline-wrapper {
     order: 1;
     flex: 1 1 100%;
+  }
+
+  .play-btn {
+    order: 2;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+  }
+
+  .speed-controls {
+    width: 100%;
+    justify-content: center;
   }
 }
