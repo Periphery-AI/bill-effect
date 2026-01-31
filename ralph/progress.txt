@@ -160,3 +160,30 @@ Files changed:
 - apps/web/.env.example (new - environment variable documentation)
 
 ---
+
+## Task 9: Simulation Engine (COMPLETED)
+- Connected timeline playback to event generation via Zustand store
+- BillInput now saves bills to store and triggers bill analysis on load
+- Timeline component now uses Zustand store for playback state instead of local state
+- App.tsx wires simulation flow: bill loaded -> press play -> analyze -> generate events -> playback
+- Events are filtered by current date during playback
+- Simulation auto-starts playback after analysis completes
+- Play button shows loading state while analyzing bill
+- Play button is disabled when no bill is loaded
+- Pressing play with a bill but no events triggers analysis + event generation
+- Timeline advances one day per second (adjusted by speed: 1x, 2x, 5x)
+- Playback automatically stops at end date
+- Build and lint pass
+
+Key decisions:
+- Moved simulation orchestration to App.tsx for simplicity rather than a separate hook
+- Used useState for isAnalyzing state since it's UI-specific
+- Timeline receives props from App for hasBill/hasEvents/isAnalyzing to control button state
+
+Files changed:
+- apps/web/src/components/BillInput.tsx (connected to store with setBill/clearBill)
+- apps/web/src/components/Timeline.tsx (uses store for playback state, added simulation trigger props)
+- apps/web/src/App.tsx (added simulation orchestration with analyzeBill/simulateImpacts)
+- apps/web/src/hooks/index.ts (new - barrel export for hooks)
+
+---

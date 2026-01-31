@@ -1,4 +1,6 @@
 import { useState, useCallback, useRef, type DragEvent, type ChangeEvent } from 'react';
+import { useBill, useBillActions } from '../store';
+import type { Bill } from '../types';
 
 interface ParsedBill {
   title: string;
@@ -7,11 +9,31 @@ interface ParsedBill {
 }
 
 export function BillInput() {
-  const [bill, setBill] = useState<ParsedBill | null>(null);
+  const storedBill = useBill();
+  const { setBill: setStoreBill, clearBill } = useBillActions();
+  const [localBill, setLocalBill] = useState<ParsedBill | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Use stored bill if available, otherwise use local bill
+  const bill = storedBill ? {
+    title: storedBill.title,
+    content: storedBill.content,
+    filename: undefined,
+  } : localBill;
+
+  // Helper to save bill to store
+  const saveBillToStore = useCallback((parsedBill: ParsedBill) => {
+    const newBill: Bill = {
+      id: `bill-${Date.now()}`,
+      title: parsedBill.title,
+      content: parsedBill.content,
+      uploadedAt: new Date(),
+    };
+    setStoreBill(newBill);
+  }, [setStoreBill]);
 
   const extractTitle = (content: string): string => {
     // Try to extract title from common bill formats
@@ -46,13 +68,15 @@ export function BillInput() {
     }
 
     const title = extractTitle(content);
-    setBill({
+    const parsedBill = {
       title,
       content: content.trim(),
       filename,
-    });
+    };
+    setLocalBill(parsedBill);
+    saveBillToStore(parsedBill);
     setError(null);
-  }, []);
+  }, [saveBillToStore]);
 
   const handleFile = useCallback(async (file: File) => {
     setError(null);
@@ -133,13 +157,15 @@ export function BillInput() {
     if (content.trim()) {
       parseTextContent(content);
     } else {
-      setBill(null);
+      setLocalBill(null);
+      clearBill();
       setError(null);
     }
-  }, [parseTextContent]);
+  }, [parseTextContent, clearBill]);
 
   const handleReset = useCallback(() => {
-    setBill(null);
+    setLocalBill(null);
+    clearBill();
     setError(null);
     if (textareaRef.current) {
       textareaRef.current.value = '';
@@ -147,7 +173,7 @@ export function BillInput() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  }, []);
+  }, [clearBill]);
 
   const handleBrowseClick = useCallback(() => {
     fileInputRef.current?.click();

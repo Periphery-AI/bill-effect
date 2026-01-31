@@ -1,22 +1,16 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import type { PlaybackState } from '../types';
+import { useCallback, useRef, useEffect } from 'react';
+import { usePlayback, usePlaybackActions } from '../store';
 
 interface TimelineProps {
-  onPlaybackChange?: (state: PlaybackState) => void;
+  onSimulationStart?: () => void;
+  isAnalyzing?: boolean;
+  hasBill?: boolean;
+  hasEvents?: boolean;
 }
 
-export function Timeline({ onPlaybackChange }: TimelineProps) {
-  const today = new Date();
-  const defaultEndDate = new Date(today);
-  defaultEndDate.setFullYear(defaultEndDate.getFullYear() + 2);
-
-  const [playback, setPlayback] = useState<PlaybackState>({
-    isPlaying: false,
-    speed: 1,
-    currentDate: new Date(today),
-    startDate: new Date(today),
-    endDate: defaultEndDate,
-  });
+export function Timeline({ onSimulationStart, isAnalyzing, hasBill, hasEvents }: TimelineProps) {
+  const playback = usePlayback();
+  const { togglePlayback, setCurrentDate, setSpeed, pause } = usePlaybackActions();
 
   const trackRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -31,21 +25,19 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
 
   const progress = Math.min(100, Math.max(0, (currentDays / totalDays) * 100));
 
-  const updatePlayback = useCallback((updates: Partial<PlaybackState>) => {
-    setPlayback((prev) => {
-      const newState = { ...prev, ...updates };
-      onPlaybackChange?.(newState);
-      return newState;
-    });
-  }, [onPlaybackChange]);
+  const handlePlayClick = useCallback(() => {
+    // If we have a bill but no events yet, start simulation
+    if (hasBill && !hasEvents && !playback.isPlaying && onSimulationStart) {
+      onSimulationStart();
+      return;
+    }
+    // Otherwise toggle playback
+    togglePlayback();
+  }, [hasBill, hasEvents, playback.isPlaying, onSimulationStart, togglePlayback]);
 
-  const togglePlay = useCallback(() => {
-    updatePlayback({ isPlaying: !playback.isPlaying });
-  }, [playback.isPlaying, updatePlayback]);
-
-  const setSpeed = useCallback((speed: 1 | 2 | 5) => {
-    updatePlayback({ speed });
-  }, [updatePlayback]);
+  const handleSpeedChange = useCallback((speed: 1 | 2 | 5) => {
+    setSpeed(speed);
+  }, [setSpeed]);
 
   const handleTrackClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!trackRef.current) return;
@@ -58,8 +50,8 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
     const newDate = new Date(playback.startDate);
     newDate.setDate(newDate.getDate() + daysFromStart);
 
-    updatePlayback({ currentDate: newDate });
-  }, [totalDays, playback.startDate, updatePlayback]);
+    setCurrentDate(newDate);
+  }, [totalDays, playback.startDate, setCurrentDate]);
 
   // Handle dragging the scrubber
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -76,7 +68,7 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
       const newDate = new Date(playback.startDate);
       newDate.setDate(newDate.getDate() + daysFromStart);
 
-      updatePlayback({ currentDate: newDate });
+      setCurrentDate(newDate);
     };
 
     const handleMouseUp = () => {
@@ -86,7 +78,7 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  }, [totalDays, playback.startDate, updatePlayback]);
+  }, [totalDays, playback.startDate, setCurrentDate]);
 
   // Playback interval effect
   useEffect(() => {
@@ -95,19 +87,16 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
       const intervalMs = 1000 / playback.speed;
 
       intervalRef.current = setInterval(() => {
-        setPlayback((prev) => {
-          const newDate = new Date(prev.currentDate);
-          newDate.setDate(newDate.getDate() + 1);
+        const newDate = new Date(playback.currentDate);
+        newDate.setDate(newDate.getDate() + 1);
 
-          // Stop at end date
-          if (newDate >= prev.endDate) {
-            return { ...prev, currentDate: prev.endDate, isPlaying: false };
-          }
-
-          const newState = { ...prev, currentDate: newDate };
-          onPlaybackChange?.(newState);
-          return newState;
-        });
+        // Stop at end date
+        if (newDate >= playback.endDate) {
+          setCurrentDate(playback.endDate);
+          pause();
+        } else {
+          setCurrentDate(newDate);
+        }
       }, intervalMs);
     } else {
       if (intervalRef.current) {
@@ -121,7 +110,7 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [playback.isPlaying, playback.speed, onPlaybackChange]);
+  }, [playback.isPlaying, playback.speed, playback.currentDate, playback.endDate, setCurrentDate, pause]);
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', {
@@ -138,15 +127,26 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
     });
   };
 
+  // Determine button state
+  const isDisabled = isAnalyzing || (!hasBill && !hasEvents);
+  const showLoader = isAnalyzing;
+
   return (
     <div className="timeline">
       <div className="timeline-controls">
         <button
-          className="play-btn"
+          className={`play-btn ${showLoader ? 'loading' : ''}`}
           aria-label={playback.isPlaying ? 'Pause' : 'Play'}
-          onClick={togglePlay}
+          onClick={handlePlayClick}
+          disabled={isDisabled}
         >
-          {playback.isPlaying ? '⏸' : '▶'}
+          {showLoader ? (
+            <span className="loader">⏳</span>
+          ) : playback.isPlaying ? (
+            '⏸'
+          ) : (
+            '▶'
+          )}
         </button>
 
         <div className="timeline-wrapper">
@@ -180,7 +180,7 @@ export function Timeline({ onPlaybackChange }: TimelineProps) {
           <button
             key={speed}
             className={`speed-btn ${playback.speed === speed ? 'active' : ''}`}
-            onClick={() => setSpeed(speed)}
+            onClick={() => handleSpeedChange(speed)}
           >
             {speed}x
           </button>
