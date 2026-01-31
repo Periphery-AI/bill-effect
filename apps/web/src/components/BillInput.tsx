@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, type DragEvent, type ChangeEvent } from 'react';
 import { useBill, useBillActions } from '../store';
+import { extractPdfText, isReductoConfigured } from '../api/reducto';
 import type { Bill } from '../types';
 
 interface ParsedBill {
@@ -13,9 +14,9 @@ export function BillInput() {
   const { setBill: setStoreBill, clearBill } = useBillActions();
   const [localBill, setLocalBill] = useState<ParsedBill | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isProcessingPdf, setIsProcessingPdf] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Use stored bill if available, otherwise use local bill
   const bill = storedBill ? {
@@ -81,10 +82,21 @@ export function BillInput() {
   const handleFile = useCallback(async (file: File) => {
     setError(null);
 
-    if (file.type === 'application/pdf') {
-      // For PDFs, we'd need a PDF parsing library
-      // For now, show a message that PDF support is coming
-      setError('PDF support coming soon. Please paste the bill text directly for now.');
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      if (!isReductoConfigured()) {
+        setError('PDF processing requires a Reducto API key. Set VITE_REDUCTO_API_KEY in your .env file.');
+        return;
+      }
+
+      setIsProcessingPdf(true);
+      try {
+        const result = await extractPdfText(file);
+        parseTextContent(result.text, file.name);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to extract text from PDF');
+      } finally {
+        setIsProcessingPdf(false);
+      }
       return;
     }
 
@@ -152,24 +164,10 @@ export function BillInput() {
     }
   }, [handleFile]);
 
-  const handleTextChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    const content = e.target.value;
-    if (content.trim()) {
-      parseTextContent(content);
-    } else {
-      setLocalBill(null);
-      clearBill();
-      setError(null);
-    }
-  }, [parseTextContent, clearBill]);
-
   const handleReset = useCallback(() => {
     setLocalBill(null);
     clearBill();
     setError(null);
-    if (textareaRef.current) {
-      textareaRef.current.value = '';
-    }
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -183,21 +181,18 @@ export function BillInput() {
   if (bill) {
     return (
       <div className="bill-input">
-        <h2>Bill Loaded</h2>
         <div className="bill-summary">
+          <div className="bill-loaded-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <div className="bill-loaded-message">PDF contents extracted</div>
           <div className="bill-title">{bill.title}</div>
           {bill.filename && (
-            <div className="bill-filename">Source: {bill.filename}</div>
+            <div className="bill-filename">{bill.filename}</div>
           )}
-          <div className="bill-stats">
-            {bill.content.length.toLocaleString()} characters
-            {' • '}
-            {bill.content.split(/\s+/).length.toLocaleString()} words
-          </div>
-          <div className="bill-preview">
-            {bill.content.slice(0, 300)}
-            {bill.content.length > 300 && '...'}
-          </div>
           <button className="reset-button" onClick={handleReset}>
             Load Different Bill
           </button>
@@ -211,38 +206,42 @@ export function BillInput() {
       <h2>Bill Input</h2>
 
       <div
-        className={`drop-zone ${isDragging ? 'dragging' : ''}`}
+        className={`drop-zone ${isDragging ? 'dragging' : ''} ${isProcessingPdf ? 'processing' : ''}`}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
         <div className="drop-zone-content">
-          <div className="drop-icon">📄</div>
-          <p>Drag & drop a bill file here</p>
-          <p className="file-types">.txt, .md files supported</p>
-          <button type="button" className="browse-button" onClick={handleBrowseClick}>
-            Browse Files
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".txt,.md,.pdf,text/plain"
-            onChange={handleFileSelect}
-            style={{ display: 'none' }}
-          />
+          {isProcessingPdf ? (
+            <>
+              <div className="processing-spinner">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+              </div>
+              <p>Extracting text from PDF...</p>
+              <p className="file-types">This may take a moment for large documents</p>
+            </>
+          ) : (
+            <>
+              <div className="drop-icon">📄</div>
+              <p>Drag & drop a bill file here</p>
+              <p className="file-types">.pdf, .txt, .md files supported</p>
+              <button type="button" className="browse-button" onClick={handleBrowseClick}>
+                Browse Files
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".txt,.md,.pdf,text/plain,application/pdf"
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+              />
+            </>
+          )}
         </div>
       </div>
-
-      <p className="or-divider">or paste text below</p>
-
-      <textarea
-        ref={textareaRef}
-        className="bill-textarea"
-        placeholder="Paste bill text here..."
-        rows={8}
-        onChange={handleTextChange}
-      />
 
       {error && (
         <div className="error-message">{error}</div>

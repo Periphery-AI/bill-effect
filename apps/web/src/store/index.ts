@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
 import type { Bill, SimulationEvent, PlaybackState } from '../types';
 
 // Actions interface
@@ -152,26 +153,32 @@ export const usePlayback = () => useAppStore((state) => state.playback);
 
 // Action hooks
 export const useBillActions = () =>
-  useAppStore((state) => ({
-    setBill: state.setBill,
-    clearBill: state.clearBill,
-  }));
+  useAppStore(
+    useShallow((state) => ({
+      setBill: state.setBill,
+      clearBill: state.clearBill,
+    }))
+  );
 
 export const useEventActions = () =>
-  useAppStore((state) => ({
-    addEvent: state.addEvent,
-    addEvents: state.addEvents,
-    clearEvents: state.clearEvents,
-    getEventsUpToDate: state.getEventsUpToDate,
-  }));
+  useAppStore(
+    useShallow((state) => ({
+      addEvent: state.addEvent,
+      addEvents: state.addEvents,
+      clearEvents: state.clearEvents,
+      getEventsUpToDate: state.getEventsUpToDate,
+    }))
+  );
 
 export const usePlaybackActions = () =>
-  useAppStore((state) => ({
-    play: state.play,
-    pause: state.pause,
-    togglePlayback: state.togglePlayback,
-    setCurrentDate: state.setCurrentDate,
-    setSpeed: state.setSpeed,
-    setDateRange: state.setDateRange,
-    resetPlayback: state.resetPlayback,
-  }));
+  useAppStore(
+    useShallow((state) => ({
+      play: state.play,
+      pause: state.pause,
+      togglePlayback: state.togglePlayback,
+      setCurrentDate: state.setCurrentDate,
+      setSpeed: state.setSpeed,
+      setDateRange: state.setDateRange,
+      resetPlayback: state.resetPlayback,
+    }))
+  );

@@ -13,9 +13,9 @@ export function EventPopup({ events, position, stateName }: EventPopupProps) {
   if (events.length === 0) return null;
 
   const impactColors = {
-    positive: 'var(--accent-2)',
-    negative: 'var(--accent)',
-    neutral: 'var(--muted)',
+    positive: 'var(--accent-green)',
+    negative: 'var(--accent-red)',
+    neutral: 'var(--text-muted)',
   };
 
   const impactIcons = {
@@ -85,10 +85,10 @@ interface EventMarkerProps {
 
 export function EventMarker({ eventCount, impact, onClick, isSelected }: EventMarkerProps) {
   const impactColors = {
-    positive: 'var(--accent-2)',
-    negative: 'var(--accent)',
-    neutral: 'var(--muted)',
-    mixed: '#8b5cf6', // purple for mixed impact
+    positive: 'var(--accent-green)',
+    negative: 'var(--accent-red)',
+    neutral: 'var(--text-muted)',
+    mixed: '#a855f7', // purple for mixed impact
   };
 
   return (
@@ -97,23 +97,34 @@ export function EventMarker({ eventCount, impact, onClick, isSelected }: EventMa
       onClick={onClick}
       style={{ cursor: 'pointer' }}
     >
+      {/* Outer glow ring */}
       <circle
-        r={isSelected ? 14 : 10}
+        r={isSelected ? 18 : 14}
+        fill="none"
+        stroke={impactColors[impact]}
+        strokeWidth={1}
+        opacity={0.3}
+        className="event-marker-glow"
+      />
+      {/* Main circle */}
+      <circle
+        r={isSelected ? 12 : 9}
         fill={impactColors[impact]}
         className="event-marker-bg"
       />
+      {/* Inner ring */}
       <circle
-        r={isSelected ? 14 : 10}
+        r={isSelected ? 12 : 9}
         fill="none"
-        stroke="white"
-        strokeWidth={2}
+        stroke="rgba(255,255,255,0.3)"
+        strokeWidth={1}
         className="event-marker-ring"
       />
       <text
         textAnchor="middle"
         dominantBaseline="central"
         fill="white"
-        fontSize={isSelected ? 11 : 9}
+        fontSize={isSelected ? 10 : 8}
         fontWeight={600}
         className="event-marker-count"
       >

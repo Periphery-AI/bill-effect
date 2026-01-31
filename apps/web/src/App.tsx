@@ -56,8 +56,8 @@ export default function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <div className="eyebrow">Bill Effect</div>
-        <h1>Model the ripple effects of a bill</h1>
+        <div className="eyebrow">OpenBill // Impact Analysis</div>
+        <h1>Legislative Effect Simulation</h1>
       </header>
 
       <main className="main-layout">

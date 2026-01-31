@@ -60,7 +60,7 @@ async function callGrokAPI(messages: GrokMessage[]): Promise<string> {
       'Authorization': `Bearer ${GROK_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'grok-2-latest',
+      model: 'grok-3-fast',
       messages,
       temperature: 0.7,
     }),

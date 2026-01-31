@@ -106,20 +106,20 @@ export function MapView({ events = [], isLoading = false, hasBill = false }: Map
                   }}
                   style={{
                     default: {
-                      fill: hasEvents ? 'var(--bg-accent)' : 'var(--bg)',
-                      stroke: 'var(--stroke)',
-                      strokeWidth: 0.5,
+                      fill: hasEvents ? 'var(--bg-elevated)' : 'var(--bg-tertiary)',
+                      stroke: hasEvents ? 'var(--border-accent)' : 'var(--border-default)',
+                      strokeWidth: hasEvents ? 1 : 0.5,
                       outline: 'none',
                     },
                     hover: {
-                      fill: 'var(--accent)',
-                      stroke: 'var(--ink)',
+                      fill: 'var(--bg-elevated)',
+                      stroke: 'var(--accent-cyan-dim)',
                       strokeWidth: 1,
                       outline: 'none',
                       cursor: 'pointer',
                     },
                     pressed: {
-                      fill: 'var(--accent-2)',
+                      fill: 'var(--accent-cyan-glow)',
                       outline: 'none',
                     },
                   }}
