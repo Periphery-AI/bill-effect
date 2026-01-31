@@ -27,3 +27,21 @@ Files changed:
 - apps/web/src/api/.gitkeep (new)
 
 ---
+
+## Task 2: Main App Layout with Three Panels (COMPLETED)
+- Created three-panel layout using CSS Grid
+- Left panel: BillInput component with drag-drop zone and textarea
+- Center panel: MapView placeholder for US map
+- Bottom panel: Timeline with play/pause button, scrubber, and speed controls
+- Responsive design: stacks vertically on screens < 900px
+- Mobile-friendly: additional breakpoints at 640px
+
+Files changed:
+- apps/web/src/App.tsx (replaced with new layout)
+- apps/web/src/index.css (complete rewrite for grid layout)
+- apps/web/src/components/BillInput.tsx (new)
+- apps/web/src/components/MapView.tsx (new)
+- apps/web/src/components/Timeline.tsx (new)
+- apps/web/src/components/index.ts (new - barrel export)
+
+---
