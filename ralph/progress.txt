@@ -139,3 +139,24 @@ Files changed:
 - apps/web/src/App.tsx (connected to store for event filtering)
 
 ---
+
+## Task 8: Grok API Integration Stub (COMPLETED)
+- Created Grok API client in src/api/grok.ts
+- API client setup for Grok (x.ai) with chat completions endpoint
+- Implemented analyzeBill(billText) function that returns structured BillAnalysis
+- Implemented simulateImpacts(analysis, dateRange) function that returns SimulationEvent[]
+- Added BillAnalysis and BillClause types for structured bill data
+- Environment variable VITE_GROK_API_KEY for API key configuration
+- Mock responses for development when API key not configured
+- Mock analysis extracts title from bill text and generates realistic clauses
+- Mock events distributed across timeline with varied impacts per state
+- Created .env.example with documentation for API key setup
+- Created api/index.ts barrel export for clean imports
+- Build and lint pass
+
+Files changed:
+- apps/web/src/api/grok.ts (new - main API client)
+- apps/web/src/api/index.ts (new - barrel export)
+- apps/web/.env.example (new - environment variable documentation)
+
+---

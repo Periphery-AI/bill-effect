@@ -20,7 +20,7 @@
       "Bottom panel: Timeline with play/pause controls",
       "Responsive layout using CSS grid or flexbox"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 3,
@@ -32,7 +32,7 @@
       "Add state name tooltips on hover",
       "Style with appropriate colors for visibility"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 4,
@@ -44,7 +44,7 @@
       "Parse and store bill text in state",
       "Show bill title/summary after upload"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 5,
@@ -57,7 +57,7 @@
       "Speed controls (1x, 2x, 5x)",
       "Current date display"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 6,
@@ -68,7 +68,7 @@
       "Actions for: setBill, addEvent, setDate, play/pause",
       "TypeScript types for all state"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 7,
@@ -81,7 +81,7 @@
       "Stack multiple events per state",
       "Click to expand event details"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 8,
@@ -94,7 +94,7 @@
       "Environment variable for API key",
       "Mock responses for development"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 9,
