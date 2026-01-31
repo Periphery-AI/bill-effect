@@ -1,31 +1,134 @@
 [
   {
+    "id": 1,
     "category": "foundation",
-    "description": "Frontend scaffold and visual shell for Bill Effect",
+    "description": "Set up project structure with proper dependencies",
     "steps": [
-      "Open the web app",
-      "See a hero section and four cards describing the loop",
-      "Confirm no TypeScript errors"
+      "Install dependencies: react-simple-maps, d3-geo, zustand for state",
+      "Create folder structure: components/, hooks/, types/, utils/, api/",
+      "Verify npm install works and app compiles"
+    ],
+    "passes": true
+  },
+  {
+    "id": 2,
+    "category": "core-ui",
+    "description": "Create the main app layout with three panels",
+    "steps": [
+      "Left panel: Bill input area (drag-drop zone + text paste)",
+      "Center panel: US map placeholder",
+      "Bottom panel: Timeline with play/pause controls",
+      "Responsive layout using CSS grid or flexbox"
     ],
     "passes": false
   },
   {
-    "category": "backend",
-    "description": "Integrate Opencode backend in apps/opencode",
+    "id": 3,
+    "category": "map",
+    "description": "Implement interactive US map with state boundaries",
     "steps": [
-      "Install Opencode in apps/opencode",
-      "Document how to run the backend",
-      "Wire frontend to backend (placeholder ok)"
+      "Use react-simple-maps with US topology",
+      "Render all 50 states with hover effects",
+      "Add state name tooltips on hover",
+      "Style with appropriate colors for visibility"
     ],
     "passes": false
   },
   {
-    "category": "ai",
-    "description": "Add Grok tool stub that records single-step predictions",
+    "id": 4,
+    "category": "bill-input",
+    "description": "Create bill input component with drag-drop and paste",
     "steps": [
-      "Create an API stub for a single prediction step",
-      "Expose a UI action to call the stub",
-      "Log the response in the UI"
+      "Drag-drop zone for PDF/text files",
+      "Text area for pasting bill content",
+      "Parse and store bill text in state",
+      "Show bill title/summary after upload"
+    ],
+    "passes": false
+  },
+  {
+    "id": 5,
+    "category": "timeline",
+    "description": "Build timeline component with playback controls",
+    "steps": [
+      "Timeline bar showing date range (today -> future)",
+      "Play/pause button to control simulation",
+      "Scrubber to jump to specific dates",
+      "Speed controls (1x, 2x, 5x)",
+      "Current date display"
+    ],
+    "passes": false
+  },
+  {
+    "id": 6,
+    "category": "state-management",
+    "description": "Set up Zustand store for app state",
+    "steps": [
+      "Store for: bill content, simulation events, current date, playback state",
+      "Actions for: setBill, addEvent, setDate, play/pause",
+      "TypeScript types for all state"
+    ],
+    "passes": false
+  },
+  {
+    "id": 7,
+    "category": "events",
+    "description": "Create event popup system for map",
+    "steps": [
+      "Event type: { id, state, date, title, description, impact }",
+      "Popup component that appears at state location",
+      "Animation for event appearance",
+      "Stack multiple events per state",
+      "Click to expand event details"
+    ],
+    "passes": false
+  },
+  {
+    "id": 8,
+    "category": "api",
+    "description": "Create Grok API integration stub",
+    "steps": [
+      "API client setup for Grok (x.ai)",
+      "Function: analyzeBill(billText) -> structured analysis",
+      "Function: simulateImpacts(analysis, dateRange) -> event[]",
+      "Environment variable for API key",
+      "Mock responses for development"
+    ],
+    "passes": false
+  },
+  {
+    "id": 9,
+    "category": "simulation",
+    "description": "Implement simulation engine",
+    "steps": [
+      "Connect timeline playback to event generation",
+      "Filter events by current date",
+      "Trigger events as timeline progresses",
+      "Handle simulation start/stop/reset"
+    ],
+    "passes": false
+  },
+  {
+    "id": 10,
+    "category": "integration",
+    "description": "Wire everything together end-to-end",
+    "steps": [
+      "Upload bill -> parse -> analyze (mock)",
+      "Press play -> timeline advances -> events appear on map",
+      "Events show at correct states based on bill analysis",
+      "Full user flow works with mock data"
+    ],
+    "passes": false
+  },
+  {
+    "id": 11,
+    "category": "polish",
+    "description": "Add visual polish and UX improvements",
+    "steps": [
+      "Loading states during analysis",
+      "Error handling and user feedback",
+      "Smooth animations and transitions",
+      "Mobile-friendly responsive design"
     ],
     "passes": false
   }

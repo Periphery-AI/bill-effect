@@ -1,1 +1,29 @@
-- Initialized repo scaffolding with React frontend, Opencode placeholder, and Ralph loop templates.
+# Bill Effect Simulator - Progress Log
+
+## Session Start
+- Initialized Ralph loop for Claude Code
+- Deleted OpenCode placeholder
+- Created comprehensive PRD with 11 tasks
+- Ready to begin implementation
+
+---
+
+## Task 1: Foundation Setup (COMPLETED)
+- Added dependencies: react-simple-maps, d3-geo, zustand, @types/d3-geo
+- Updated eslint-plugin-react-hooks to v5 for ESLint 9 compatibility
+- Added typescript-eslint for proper TypeScript linting
+- Created folder structure: components/, hooks/, types/, utils/, api/
+- Created src/types/index.ts with core TypeScript interfaces (Bill, SimulationEvent, PlaybackState, AppState)
+- Fixed ESLint config to use tseslint.config() for TypeScript support
+- Verified npm install, build, and lint all pass
+
+Files changed:
+- apps/web/package.json (added deps)
+- apps/web/eslint.config.js (TypeScript support)
+- apps/web/src/types/index.ts (new)
+- apps/web/src/components/.gitkeep (new)
+- apps/web/src/hooks/.gitkeep (new)
+- apps/web/src/utils/.gitkeep (new)
+- apps/web/src/api/.gitkeep (new)
+
+---
