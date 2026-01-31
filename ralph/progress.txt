@@ -214,3 +214,34 @@ Files changed:
 - apps/web/src/App.tsx (added auto-start playback, playback reset before simulation)
 
 ---
+
+## Task 11: Visual Polish and UX Improvements (COMPLETED)
+- Added improved loading state during bill analysis:
+  - Play button shows spinner animation when loading
+  - Timeline shows "Analyzing bill..." status message with animated icon
+  - Map shows loading overlay with blur effect and spinning icon
+- Enhanced error handling with styled error messages
+- Added map hint overlay that guides users:
+  - "Upload a bill to get started" when no bill loaded
+  - "Press play to simulate bill effects" when bill is ready
+- Added disabled state styling for play button
+- Added pulse animation for loading status messages
+- Added spin animation for loading icons
+- Added slideInUp animation for success messages and hints
+- All existing animations preserved (fadeIn, popupAppear, eventSlideIn, markerPulse)
+- Mobile-friendly responsive design already in place from earlier tasks
+- Build and lint pass
+
+Key polish features:
+1. Loading states: Spinner on play button, status message, map overlay
+2. Error handling: Styled error messages with red background
+3. Animations: Spin, pulse, slideInUp, fadeIn transitions
+4. Mobile responsive: Breakpoints at 900px and 640px
+
+Files changed:
+- apps/web/src/index.css (added loading overlay, hint, success message styles)
+- apps/web/src/components/Timeline.tsx (added analyzing status message display)
+- apps/web/src/components/MapView.tsx (added loading overlay and hint overlay)
+- apps/web/src/App.tsx (pass isLoading and hasBill props to MapView)
+
+---

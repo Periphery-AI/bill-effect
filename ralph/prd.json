@@ -130,6 +130,6 @@
       "Smooth animations and transitions",
       "Mobile-friendly responsive design"
     ],
-    "passes": false
+    "passes": true
   }
 ]

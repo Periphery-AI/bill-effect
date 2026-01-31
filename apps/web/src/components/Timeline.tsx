@@ -171,7 +171,14 @@ export function Timeline({ onSimulationStart, isAnalyzing, hasBill, hasEvents }:
           </div>
         </div>
 
-        <span className="current-date">{formatDate(playback.currentDate)}</span>
+        {isAnalyzing ? (
+          <span className="timeline-status">
+            <span className="timeline-status-icon">⚙️</span>
+            Analyzing bill...
+          </span>
+        ) : (
+          <span className="current-date">{formatDate(playback.currentDate)}</span>
+        )}
       </div>
 
       <div className="speed-controls">

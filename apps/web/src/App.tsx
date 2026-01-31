@@ -71,7 +71,11 @@ export default function App() {
         </aside>
 
         <section className="center-panel">
-          <MapView events={visibleEvents} />
+          <MapView
+            events={visibleEvents}
+            isLoading={isAnalyzing}
+            hasBill={bill !== null}
+          />
         </section>
       </main>
 

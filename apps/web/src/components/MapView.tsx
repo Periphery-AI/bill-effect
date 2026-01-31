@@ -19,9 +19,11 @@ interface TooltipState {
 
 interface MapViewProps {
   events?: SimulationEvent[];
+  isLoading?: boolean;
+  hasBill?: boolean;
 }
 
-export function MapView({ events = [] }: MapViewProps) {
+export function MapView({ events = [], isLoading = false, hasBill = false }: MapViewProps) {
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [popupPosition, setPopupPosition] = useState<{ x: number; y: number } | null>(null);
@@ -180,6 +182,25 @@ export function MapView({ events = [] }: MapViewProps) {
             position={popupPosition}
             stateName={selectedState}
           />
+        </div>
+      )}
+
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="map-overlay">
+          <div className="map-overlay-content">
+            <span className="map-overlay-icon">⚙️</span>
+            <span className="map-overlay-text">Analyzing bill impacts...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Empty state hint */}
+      {!isLoading && events.length === 0 && (
+        <div className="map-hint">
+          {hasBill
+            ? 'Press play to simulate bill effects'
+            : 'Upload a bill to get started'}
         </div>
       )}
     </div>
