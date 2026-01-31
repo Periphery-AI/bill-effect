@@ -45,3 +45,19 @@ Files changed:
 - apps/web/src/components/index.ts (new - barrel export)
 
 ---
+
+## Task 3: Interactive US Map (COMPLETED)
+- Implemented US map using react-simple-maps with ComposableMap component
+- Using geoAlbersUsa projection for proper display of Alaska and Hawaii
+- Fetching topology from cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json
+- Added hover effects: states highlight with accent color on hover
+- Implemented tooltip system that follows mouse cursor and displays state name
+- Tooltip styled with dark background and arrow pointer
+- States have smooth fill transition animation
+- Updated CSS for proper map sizing within container
+
+Files changed:
+- apps/web/src/components/MapView.tsx (rewritten with react-simple-maps)
+- apps/web/src/index.css (updated map styles, added tooltip styles)
+
+---

@@ -157,24 +157,44 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-.map-placeholder {
-  text-align: center;
-  color: var(--muted);
+.map-view svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
 }
 
-.map-placeholder span {
-  display: block;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--ink);
+/* State styling */
+.us-state {
+  transition: fill 0.15s ease;
 }
 
-.map-placeholder p {
-  margin: 0;
-  font-size: 14px;
+/* Map Tooltip */
+.map-tooltip {
+  position: fixed;
+  background: var(--ink);
+  color: var(--card);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.map-tooltip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--ink);
 }
 
 /* Timeline Component */
