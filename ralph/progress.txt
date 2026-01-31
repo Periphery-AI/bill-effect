@@ -115,3 +115,27 @@ Files changed:
 - apps/web/src/store/index.ts (new)
 
 ---
+
+## Task 7: Event Popup System for Map (COMPLETED)
+- Created state centroid coordinates utility (stateCoordinates.ts) with lat/long for all 50 states + DC
+- Created EventPopup component with expandable event details
+- Created EventMarker component for SVG markers on the map
+- Markers show event count, colored by impact type (green=positive, orange=negative, gray=neutral, purple=mixed)
+- Event popup displays list of events with title, impact icon, description, and date
+- Click on marker opens popup, click on event item expands details
+- Animations: marker pulse effect, popup slide-in, event item stagger animation
+- Integrated events into MapView with filtering by state
+- States with events are highlighted with accent background
+- Tooltip shows event count when hovering over states with events
+- Connected MapView to store - events filtered by current playback date
+- Build and lint pass
+
+Files changed:
+- apps/web/src/utils/stateCoordinates.ts (new)
+- apps/web/src/components/EventPopup.tsx (new)
+- apps/web/src/components/MapView.tsx (updated with events integration)
+- apps/web/src/components/index.ts (added EventPopup export)
+- apps/web/src/index.css (added event marker and popup styles)
+- apps/web/src/App.tsx (connected to store for event filtering)
+
+---

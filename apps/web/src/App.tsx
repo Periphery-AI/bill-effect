@@ -1,6 +1,16 @@
+import { useMemo } from 'react';
 import { BillInput, MapView, Timeline } from './components';
+import { useEvents, usePlayback } from './store';
 
 export default function App() {
+  const events = useEvents();
+  const playback = usePlayback();
+
+  // Filter events to only show those up to the current playback date
+  const visibleEvents = useMemo(() => {
+    return events.filter((event) => new Date(event.date) <= playback.currentDate);
+  }, [events, playback.currentDate]);
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -14,7 +24,7 @@ export default function App() {
         </aside>
 
         <section className="center-panel">
-          <MapView />
+          <MapView events={visibleEvents} />
         </section>
       </main>
 

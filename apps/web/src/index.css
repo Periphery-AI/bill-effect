@@ -441,7 +441,190 @@ body {
   border-color: var(--accent);
 }
 
+/* Event Marker Styles */
+.event-marker {
+  transition: transform 0.2s ease;
+}
+
+.event-marker:hover {
+  transform: scale(1.2);
+}
+
+.event-marker.selected .event-marker-bg {
+  filter: brightness(1.1);
+}
+
+.event-marker-bg {
+  transition: r 0.2s ease, fill 0.2s ease;
+  animation: markerPulse 2s ease-in-out infinite;
+}
+
+.event-marker-ring {
+  transition: r 0.2s ease;
+}
+
+.event-marker-count {
+  user-select: none;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Event Popup Container */
+.event-popup-container {
+  position: fixed;
+  z-index: 200;
+  min-width: 220px;
+  max-width: 320px;
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(26, 26, 26, 0.15);
+  transform: translate(-50%, calc(-100% - 20px));
+  animation: popupAppear 0.25s ease-out;
+}
+
+.event-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--stroke);
+  background: var(--bg);
+  border-radius: 12px 12px 0 0;
+}
+
+.event-popup-state {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.event-popup-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.event-popup-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.event-popup-item {
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: var(--bg);
+  border-radius: 8px;
+  border-left: 3px solid var(--muted);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  animation: eventSlideIn 0.3s ease-out both;
+}
+
+.event-popup-item:last-child {
+  margin-bottom: 0;
+}
+
+.event-popup-item:hover {
+  background: var(--bg-accent);
+}
+
+.event-popup-item.expanded {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.event-popup-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.event-impact-icon {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.event-popup-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.event-popup-details {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--stroke);
+  animation: detailsFade 0.2s ease-out;
+}
+
+.event-popup-description {
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.event-popup-date {
+  font-size: 11px;
+  color: var(--accent-2);
+  font-weight: 500;
+}
+
+/* Tooltip event count extension */
+.tooltip-event-count {
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+/* States with events have highlighted fill */
+.us-state.has-events {
+  transition: fill 0.3s ease;
+}
+
 /* Animations */
+@keyframes markerPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes popupAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 30px)) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 20px)) scale(1);
+  }
+}
+
+@keyframes eventSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes detailsFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
