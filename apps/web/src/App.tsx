@@ -1,6 +1,6 @@
 import { useMemo, useState, useCallback } from 'react';
 import { BillInput, MapView, Timeline } from './components';
-import { useEvents, usePlayback, useBill, useEventActions } from './store';
+import { useEvents, usePlayback, useBill, useEventActions, usePlaybackActions } from './store';
 import { analyzeBill, simulateImpacts } from './api';
 
 export default function App() {
@@ -8,6 +8,7 @@ export default function App() {
   const events = useEvents();
   const playback = usePlayback();
   const { addEvents, clearEvents } = useEventActions();
+  const { play, resetPlayback } = usePlaybackActions();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,8 +24,9 @@ export default function App() {
       return;
     }
 
-    // Clear any previous simulation
+    // Clear any previous simulation and reset playback to start
     clearEvents();
+    resetPlayback();
     setError(null);
     setIsAnalyzing(true);
 
@@ -42,11 +44,14 @@ export default function App() {
       addEvents(simulatedEvents);
 
       setIsAnalyzing(false);
+
+      // Auto-start playback after events are generated
+      play();
     } catch (err) {
       setIsAnalyzing(false);
       setError(err instanceof Error ? err.message : 'Failed to analyze bill');
     }
-  }, [bill, playback.startDate, playback.endDate, clearEvents, addEvents]);
+  }, [bill, playback.startDate, playback.endDate, clearEvents, addEvents, resetPlayback, play]);
 
   return (
     <div className="app-container">

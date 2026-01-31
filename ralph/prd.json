@@ -106,7 +106,7 @@
       "Trigger events as timeline progresses",
       "Handle simulation start/stop/reset"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 10,
@@ -118,7 +118,7 @@
       "Events show at correct states based on bill analysis",
       "Full user flow works with mock data"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": 11,

@@ -187,3 +187,30 @@ Files changed:
 - apps/web/src/hooks/index.ts (new - barrel export for hooks)
 
 ---
+
+## Task 10: Wire Everything Together End-to-End (COMPLETED)
+- Verified full user flow: upload bill → parse → analyze (mock) → events appear on map
+- Fixed auto-start playback after analysis completes
+- Added playback reset before new simulation starts (to ensure timeline starts from beginning)
+- Connected usePlaybackActions to App.tsx for play() and resetPlayback() control
+- Timeline advances and events appear at correct states based on bill analysis
+- Full user flow works with mock data:
+  1. User uploads/pastes bill content
+  2. Bill is parsed and saved to store
+  3. User clicks play button
+  4. Loading state shows while analyzing
+  5. Mock analysis generates bill clauses with affected states
+  6. Mock events are generated distributed across timeline
+  7. Playback auto-starts after events are ready
+  8. Events appear on map as timeline progresses
+  9. Clicking markers shows event details
+- Build and lint pass
+
+Key decisions:
+- Auto-start playback immediately after events are generated for seamless UX
+- Reset playback to start date when starting new simulation
+
+Files changed:
+- apps/web/src/App.tsx (added auto-start playback, playback reset before simulation)
+
+---
